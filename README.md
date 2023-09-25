@@ -19,6 +19,7 @@ Input Prompt:
 
 Result:
 (28 steps, 768x512, around 60 seconds on RTX 3090, 0.015$😱 on RunPod)
+
 https://github.com/sky24h/AnimateDiff_Serverless_Runpod/assets/26270672/3f71dbff-7b33-44ce-881d-e57e86ec3416
 
 
@@ -30,6 +31,7 @@ photo of coastline, rocks, storm weather, wind, waves, lightning, 8k uhd, dslr, 
 
 Result:
 (28 steps, 768x512, around 60 seconds on RTX 3090, 0.015$😱 on RunPod)
+
 https://github.com/sky24h/AnimateDiff_Serverless_Runpod/assets/26270672/e8bf52ca-1d16-4e65-8e35-5d40c4a3b3ae
 
 

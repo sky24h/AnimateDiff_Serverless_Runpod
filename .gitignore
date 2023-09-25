@@ -26,7 +26,8 @@ share/python-wheels/
 *.egg
 MANIFEST
 
-models/*
+models/Motion_Module/
+models/DreamBooth_LoRA/
 
 # PyInstaller
 #  Usually these files are written by a python script from a template

@@ -4,3 +4,5 @@ huggingface runwayml/stable-diffusion-v1-5/unet/diffusion_pytorch_model.fp16.saf
 huggingface runwayml/stable-diffusion-v1-5/vae/diffusion_pytorch_model.bin ./models/StableDiffusion/stable-diffusion-v1-5/vae/diffusion_pytorch_model.bin
 gdrive 1k4isw0AsD8GTNlkNhcnBJc0Zxf5hwAWU ./models/Motion_Module/mm_sd_v15_v1-fp16.safetensors
 gdrive 1lNd9A0QVuIaXnsEEs0G-ABrkiue40oxF ./models/Motion_Module/mm_sd_v15_v2-fp16.safetensors
+wget https://civitai.com/api/download/models/79068 -P models/DreamBooth_LoRA/ --content-disposition --no-check-certificate
+wget https://civitai.com/api/download/models/29460 -P models/DreamBooth_LoRA/ --content-disposition --no-check-certificate

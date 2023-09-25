@@ -30,19 +30,19 @@ Model:
 
 
 Person:
-  base: "models/DreamBooth_LoRA/your_base_model_for_person.safetensors"
+  base: "models/DreamBooth_LoRA/majicmixRealistic_v5Preview.safetensors"
   lora:
-    lora1:
-    - "models/DreamBooth_LoRA/your_lora1.safetensors"
-    - 1.0
-    lora2:
-    - "models/DreamBooth_LoRA/your_lora2.safetensors"
-    - 0.4
+    # lora1:
+    # - "models/DreamBooth_LoRA/your_lora1.safetensors"
+    # - 1.0
+    # lora2:
+    # - "models/DreamBooth_LoRA/your_lora2.safetensors"
+    # - 0.4
   prompt: "attractive face, clear face, perfect body, (8k, RAW photo, best quality, masterpiece:1.3), (looking at viewer:1.8)"
   n_prompt: "(deformed iris, deformed pupils, ng_deepnegative_v1_75t),(badhandv4),(bad-hands-5:1.2),(worst quality:2),(low quality:2),(normal quality:2),lowres, watermark, blurry face, ugly, bad anatomy,bad hands,normal quality,((monochrome)),((grayscale))"
 
 Scene:
-  base: "models/DreamBooth_LoRA/your_base_model_for_scene.safetensors"
+  base: "models/DreamBooth_LoRA/realisticVisionV51_v20Novae.safetensors"
   lora:
   prompt: "8k uhd, dslr, soft lighting, high quality, film grain, Fujifilm XT3"
   n_prompt: "watermark, blur, haze, deformed iris, deformed pupils, semi-realistic, cgi, 3d, render, sketch, cartoon, drawing, anime, art, mutated hands and fingers, deformed, distorted, disfigured, poorly drawn, bad anatomy, wrong anatomy, extra limb, missing limb, floating limbs, disconnected limbs, mutation, mutated, ugly, disgusting, amputation"

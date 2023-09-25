@@ -1,7 +1,7 @@
 # AnimateDiff_Serverless_Runpod
 
 ## 1. Introduction
-This is a serverless application that uses [AnimateDiff](https://animatediff.github.io/) to run a Text-to-Image task on [RunPod](https://www.runpod.io/).
+This is a serverless application that uses [AnimateDiff](https://animatediff.github.io/) to run a Text-to-Video task on [RunPod](https://www.runpod.io/).
 
 Serverless means that you are only charged for the time you use the application, and you don't need to pay for the idle time, which is very suitable for this kind of application that is not used frequently but needs to respond quickly.
 

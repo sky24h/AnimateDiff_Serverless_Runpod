@@ -1,0 +1,6 @@
+huggingface openai/clip-vit-large-patch14/pytorch_model.bin ./models/Clip_Model/clip-vit-large-patch14/pytorch_model.bin
+huggingface runwayml/stable-diffusion-v1-5/text_encoder/pytorch_model.bin ./models/StableDiffusion/stable-diffusion-v1-5/text_encoder/pytorch_model.bin
+huggingface runwayml/stable-diffusion-v1-5/unet/diffusion_pytorch_model.fp16.safetensors ./models/StableDiffusion/stable-diffusion-v1-5/unet/diffusion_pytorch_model.fp16.safetensors
+huggingface runwayml/stable-diffusion-v1-5/vae/diffusion_pytorch_model.bin ./models/StableDiffusion/stable-diffusion-v1-5/vae/diffusion_pytorch_model.bin
+gdrive 1k4isw0AsD8GTNlkNhcnBJc0Zxf5hwAWU ./models/Motion_Module/mm_sd_v15_v1-fp16.safetensors
+gdrive 1lNd9A0QVuIaXnsEEs0G-ABrkiue40oxF ./models/Motion_Module/mm_sd_v15_v2-fp16.safetensors

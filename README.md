@@ -88,12 +88,13 @@ Sorry for not providing detailed instructions here as the author is quite busy r
 Feel free to contact me if you encounter any problems after searching on Google.
 
 #### 3. Call the Application
-##### Call the application from a Python script
+##### Call from a Python script
 ```
+# Make sure to set API key and endpoint ID before running the script.
 python test_client.py
 ```
 
-##### Showcase: Call the application from a Telegram bot
+##### Showcase: Call from a Telegram bot
 ![Example Result](./assets/telegram_bot_example.jpg)
 
 ## 4. TODO

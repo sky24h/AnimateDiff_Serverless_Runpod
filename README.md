@@ -61,7 +61,7 @@ pip install -r requirements.txt
 # Download models
 python scripts/download.py
 
-# Edit (or not) config to customize your inference
+# Edit (or not) config to customize your inference, e.g., change base model, lora model, motion lora model, etc.
 rename inference_v2(example).yaml to inference_v2.yaml
 
 # Run inference test

@@ -24,6 +24,10 @@ Result:
 (Original | PanLeft, 28 steps, 768x512, around 60 seconds on RTX 3090, 0.015$😱 on RunPod)
 
 
+https://github.com/sky24h/AnimateDiff_Serverless_Runpod/assets/26270672/b15fb186-b9a3-4077-b212-4b0c22e02dd1
+
+
+
 
 Input Prompt:
 (random seed: 195577361)
@@ -33,6 +37,10 @@ photo of coastline, rocks, storm weather, wind, waves, lightning, 8k uhd, dslr, 
 
 Result:
 (Original | ZoomOut, 28 steps, 768x512, around 60 seconds on RTX 3090, 0.015$😱 on RunPod)
+
+
+https://github.com/sky24h/AnimateDiff_Serverless_Runpod/assets/26270672/563f020f-cd65-433f-8ac9-ee4af4c9d1f9
+
 
 
 

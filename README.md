@@ -53,7 +53,7 @@ The time is measured from the moment the input prompt is sent to the moment the 
 - Sending the result image back to the client.
 
 ## 2. Dependencies
-- Python >= 3.9.7
+- Python >= 3.9
 - Docker
 - Local GPU is necessary for testing but not necessary for deployment. (Recommended: RTX 3090)
 

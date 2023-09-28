@@ -24,11 +24,12 @@ from diffusers.utils.import_utils import is_xformers_available
 from animatediff.models.unet import UNet3DConditionModel
 from animatediff.pipelines.pipeline_animation import AnimationPipeline
 from animatediff.utils.convert_from_ckpt import convert_ldm_unet_checkpoint, convert_ldm_clip_checkpoint, convert_ldm_vae_checkpoint
-from animatediff.utils.util import apply_lora
+from animatediff.utils.util import apply_lora, apply_motion_lora
 
 
-def save_video(frames: torch.Tensor):
-    output_video_path = tempfile.NamedTemporaryFile(suffix=".mp4").name
+def save_video(frames: torch.Tensor, seed=""):
+    # save seed to the file name, for reproducibility
+    output_video_path = tempfile.NamedTemporaryFile(prefix="{}_".format(seed), suffix=".mp4").name
     frames = (rearrange(frames, "b c t h w -> t b h w c").squeeze(1).cpu().numpy() * 255).astype(np.uint8)
     writer = imageio.get_writer(output_video_path, fps=8, codec="libx264", quality=9, pixelformat="yuv420p", macro_block_size=1)
     for frame in frames:
@@ -38,7 +39,7 @@ def save_video(frames: torch.Tensor):
 
 
 class AnimateDiff:
-    def __init__(self, version= "v2"):
+    def __init__(self, version="v2"):
         assert version in ["v1", "v2"], "version must be either v1 or v2"
         pretrained_model_path = os.path.join(os.path.dirname(__file__), "models/StableDiffusion/stable-diffusion-v1-5")
         motion_module = os.path.join(os.path.dirname(__file__), "models/Motion_Module/mm_sd_v15_{}-fp16.safetensors".format(version))
@@ -69,7 +70,7 @@ class AnimateDiff:
             subfolder="unet",
             unet_additional_kwargs=OmegaConf.to_container(self.inference_config.Model.unet_additional_kwargs),
             device=self.device,
-            torch_dtype=self.dtype
+            torch_dtype=self.dtype,
         )
 
         if is_xformers_available():
@@ -86,6 +87,7 @@ class AnimateDiff:
                 **OmegaConf.to_container(self.inference_config.Model.noise_scheduler_kwargs), steps_offset=1, clip_sample=False
             ),
         )
+        self.current_model = ""  # Person or Scene
 
         # 1.1 motion module
         motion_module_state_dict = {}
@@ -103,10 +105,14 @@ class AnimateDiff:
             model_config = self.inference_config.Person
         elif select == "Scene":
             model_config = self.inference_config.Scene
+        # skip if the model is already loaded
+        if select == self.current_model:
+            return -1
+
         # 1.2 T2I
         if model_config.base != "":
             if model_config.base.endswith(".ckpt"):
-                state_dict = torch.load(model_config.base)
+                state_dict = torch.load(model_config.base, map_location=self.device)
                 self.pipeline.unet.load_state_dict(state_dict)
 
             elif model_config.base.endswith(".safetensors"):
@@ -150,6 +156,7 @@ class AnimateDiff:
                 self.pipeline.unet.load_state_dict(converted_unet_checkpoint, strict=False)
                 # text_model
                 self.pipeline.text_encoder = convert_ldm_clip_checkpoint(base_state_dict)
+                del base_state_dict
 
                 # import pdb
                 # pdb.set_trace()
@@ -159,6 +166,26 @@ class AnimateDiff:
                     for lora_name, state_dict, lora_scale in lora_state_dicts:
                         self.pipeline = apply_lora(self.pipeline, state_dict, dtype=self.dtype, scale=lora_scale)
                         print(f"lora {lora_name} applied")
+                    del lora_state_dicts
+
+                motion_lora = model_config.motion_lora
+                if motion_lora:
+                    motion_lora_path, motion_lora_scale = model_config.motion_lora
+                    if motion_lora_path.endswith(".ckpt"):
+                        state_dict = torch.load(motion_lora_path, map_location=self.device)
+                        state_dict = state_dict["state_dict"] if "state_dict" in state_dict else state_dict
+                    elif motion_lora_path.endswith(".safetensors"):
+                        state_dict = {}
+                        with safe_open(motion_lora_path, framework="pt", device=self.device) as f:
+                            for key in f.keys():
+                                state_dict[key] = f.get_tensor(key)
+                    else:
+                        return -1
+                    self.pipeline = apply_motion_lora(self.pipeline, state_dict, dtype=self.dtype, scale=motion_lora_scale)
+                    del state_dict
+
+        # update last_model to avoid loading the same model repeatedly
+        self.current_model = select
 
     def inference(self, prompt, steps=28, width=None, height=None, seed=None):
         isPerson = False
@@ -192,7 +219,8 @@ class AnimateDiff:
         # inference
         n_prompt = model_config.n_prompt
         torch.seed()
-        torch.manual_seed(seed if seed is not None else torch.randint(0, 1000000000, (1,)).item())
+        seed = seed if seed is not None else torch.randint(0, 1000000000, (1,)).item()
+        torch.manual_seed(seed)
 
         print(f"current seed: {torch.initial_seed()}")
         print(f"sampling {prompt} ...")
@@ -208,13 +236,16 @@ class AnimateDiff:
                 video_length        = self.video_length,
             ).videos
 
-            save_path = save_video(sample)
+            save_path = save_video(sample, seed=seed)
         return save_path
 
 
 if __name__ == "__main__":
-    # good seed: 437719367#179071481
-    fixed_seed = 195577361#torch.randint(0, 1000000000, (1,)).item()
+    # example seeds:
+    # Person: 445608568
+    # Scene : 195577361
+    fixed_seed = 195577361  # torch.randint(0, 1000000000, (1,)).item()
+
     animate_diff = AnimateDiff()
     import json
     with open("test_input.json", "r") as f:

@@ -15,31 +15,24 @@ See [Usage](#Usage) below for more details.
 
 ### Example Result:
 Input Prompt:
+(random seed: 445608568)
 ```
-1girl, offshoulder, light smile, shiny skin best quality, masterpiece, photorealistic
+1girl, focus on face, offshoulder, light smile, shiny skin, best quality, masterpiece, photorealistic
 ```
 
 Result:
-(28 steps, 768x512, around 60 seconds on RTX 3090, 0.015$😱 on RunPod)
-
-
-https://github.com/sky24h/AnimateDiff_Serverless_Runpod/assets/26270672/91df5553-caaf-44d9-9d9f-acb8718afb25
+(Original | PanLeft, 28 steps, 768x512, around 60 seconds on RTX 3090, 0.015$😱 on RunPod)
 
 
 
 Input Prompt:
+(random seed: 195577361)
 ```
 photo of coastline, rocks, storm weather, wind, waves, lightning, 8k uhd, dslr, soft lighting, high quality, film grain, Fujifilm XT3
 ```
 
 Result:
-(28 steps, 768x512, around 60 seconds on RTX 3090, 0.015$😱 on RunPod)
-
-
-https://github.com/sky24h/AnimateDiff_Serverless_Runpod/assets/26270672/bab62124-7135-4f2a-ad33-9341a84ce5ae
-
-
-
+(Original | ZoomOut, 28 steps, 768x512, around 60 seconds on RTX 3090, 0.015$😱 on RunPod)
 
 
 
@@ -66,7 +59,7 @@ If you don't have a GPU, you can modify and test the code on [Google Colab](http
 pip install -r requirements.txt
 
 # Download models
-python script/download.py
+python scripts/download.py
 
 # Edit (or not) config to customize your inference
 rename inference_v2(example).yaml to inference_v2.yaml
@@ -105,8 +98,9 @@ python test_client.py
 ![Example Result](./assets/telegram_bot_example.jpg)
 
 ## 4. TODO
-- [x] Support specific base model for different objectives. (Person and Scene)
-- [x] Support LoRa models. (Edit yaml file and place your model in "./models/DreamBooth_LoRA")
+- [x] Support for specific base model for different objectives. (Person and Scene)
+- [x] Support for LoRa models. (Edit yaml file and place your model in "./models/DreamBooth_LoRA")
+- [x] Support for Motion LoRa models. (Also editable in yaml file, see [here](https://github.com/guoyww/AnimateDiff#features) for details and downloads.)
 - [ ] More detailed instructions
 - [ ] One-click deploy (If anyone is interested...)
 

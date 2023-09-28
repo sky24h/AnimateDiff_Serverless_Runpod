@@ -178,7 +178,6 @@ class AnimateDiff:
             self._update_model("Person")
         else:
             model_config = self.inference_config.Scene
-            print(model_config.prompt)
             prompt += model_config.prompt
             self._update_model("Scene")
 
@@ -221,10 +220,14 @@ if __name__ == "__main__":
     with open("test_input.json", "r") as f:
         test_input = json.load(f)["input"]
 
-    # slow test
+    # faster config
     save_path = animate_diff.inference(test_input["prompt"], test_input["steps"], test_input["width"], test_input["height"], seed=fixed_seed)
-    print(save_path)
+    print("Result of faster config is saved to: {}\n".format(save_path))
 
-    # fast test
+    # better config
     save_path = animate_diff.inference(test_input["prompt"], 28, 512, 768, seed=fixed_seed)
-    print(save_path)
+    print("Result of better config is saved to: {}\n".format(save_path))
+
+    # standard config, same to the original repo
+    save_path = animate_diff.inference(test_input["prompt"], 25, 512, 512, seed=fixed_seed)
+    print("Result of standard config is saved to: {}\n".format(save_path))

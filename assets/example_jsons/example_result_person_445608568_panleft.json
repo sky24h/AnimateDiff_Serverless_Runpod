@@ -1,0 +1,15 @@
+{
+    "input": {
+        "prompt": "1girl, focus on face, offshoulder, light smile, shiny skin, best quality, masterpiece, photorealistic, attractive face, clear face, (8k, RAW photo, best quality, masterpiece:1.3), (looking at viewer:1.8)",
+        "steps": 28,
+        "width": 512,
+        "height": 768,
+        "guidance_scale": 7.5,
+        "seed": 445608568,
+        "n_prompt": "(deformed iris, deformed pupils, ng_deepnegative_v1_75t),(badhandv4),(bad-hands-5:1.2),(worst quality:2),(low quality:2),(normal quality:2),lowres, watermark, blurry face, ugly, bad anatomy,bad hands,normal quality,((monochrome)),((grayscale))",
+        "base_model": "majicmixRealistic_v5Preview.safetensors",
+        "base_loras": {
+        },
+        "motion_lora": ["v2_lora_PanLeft-fp16.safetensors", 1.0]
+    }
+}

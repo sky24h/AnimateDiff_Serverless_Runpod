@@ -1,11 +1,21 @@
 import os
+import inspect
 import imageio
 import numpy as np
 from typing import Union
+from omegaconf import OmegaConf
 
 import torch
 import torchvision
 from safetensors import safe_open
+
+import transformers
+transformers.logging.set_verbosity_error()
+from transformers import CLIPTextModel, CLIPTokenizer
+from diffusers import AutoencoderKL, DDIMScheduler
+from diffusers.utils.import_utils import is_xformers_available
+from animatediff.models.unet import UNet3DConditionModel
+from animatediff.pipelines.pipeline_animation import AnimationPipeline
 
 from tqdm import tqdm
 from einops import rearrange
@@ -96,9 +106,55 @@ def load_ckpt(model_path, device):
     return state_dict
 
 
-def load_base_model(pipeline, base_config, device, dtype):
+def init_pipeline(pretrained_model_path, inference_config, device, dtype):
+    tokenizer    = CLIPTokenizer.from_pretrained(pretrained_model_path, subfolder="tokenizer", torch_dtype=dtype)
+    text_encoder = CLIPTextModel.from_pretrained(pretrained_model_path, subfolder="text_encoder", torch_dtype=dtype)
+    vae          = AutoencoderKL.from_pretrained(pretrained_model_path, subfolder="vae", torch_dtype=dtype)
+    unet         = UNet3DConditionModel.from_pretrained_2d(
+        pretrained_model_path,
+        subfolder="unet",
+        unet_additional_kwargs=OmegaConf.to_container(inference_config.Model.unet_additional_kwargs),
+        device=device,
+        torch_dtype=dtype,
+    )
+
+    if is_xformers_available():
+        unet.enable_xformers_memory_efficient_attention()
+    else:
+        assert False, "xformers is not available"
+
+    pipeline = AnimationPipeline(
+        vae=vae,
+        text_encoder=text_encoder,
+        tokenizer=tokenizer,
+        unet=unet,
+        scheduler=DDIMScheduler(
+            **OmegaConf.to_container(inference_config.Model.noise_scheduler_kwargs), steps_offset=1, clip_sample=False
+        ),
+    )
+
+
+    return pipeline
+
+def reload_motion_module(pipeline, motion_module, device):
+    *_, func_args = inspect.getargvalues(inspect.currentframe())
+    func_args = dict(func_args)
+
+    motion_module_state_dict = {}
+    with safe_open(motion_module, framework="pt", device=device) as f:
+        for key in f.keys():
+            motion_module_state_dict[key] = f.get_tensor(key)
+    if "global_step" in motion_module_state_dict:
+        func_args.update({"global_step": motion_module_state_dict["global_step"]})
+    missing, unexpected = pipeline.unet.load_state_dict(motion_module_state_dict, strict=False)
+    assert len(unexpected) == 0, f"Unexpected keys in motion module: {unexpected}"
+    del motion_module_state_dict
+    return pipeline
+
+def load_base_model(pipeline, model_dir, base_model, device, dtype):
     # load base model
-    base_state_dict = load_ckpt(base_config, device)
+    base_model = os.path.join(model_dir, base_model)
+    base_state_dict = load_ckpt(base_model, device)
     # vae
     converted_vae_checkpoint = convert_ldm_vae_checkpoint(base_state_dict, pipeline.vae.config)
     try:
@@ -120,8 +176,10 @@ def load_base_model(pipeline, base_config, device, dtype):
     return pipeline
 
 
-def apply_motion_lora(pipeline, motion_lora_config, device, dtype):
+def apply_motion_lora(pipeline, model_dir, motion_lora_config, device, dtype):
     motion_lora_path, motion_lora_scale = motion_lora_config
+    print(f"Loading motion lora from {motion_lora_path} with scale {motion_lora_scale}")
+    motion_lora_path = os.path.join(model_dir, motion_lora_path)
     state_dict = load_ckpt(motion_lora_path, device)
     # directly update weight in diffusers model
     for key in state_dict:
@@ -146,10 +204,11 @@ def apply_motion_lora(pipeline, motion_lora_config, device, dtype):
     return pipeline
 
 
-def apply_lora(pipeline, lora_configs, device, dtype):
+def apply_lora(pipeline, model_dir, lora_configs, device, dtype):
     for lora_name in lora_configs:
         lora_path, lora_scale = lora_configs[lora_name]
         print(f"Loading {lora_name} from {lora_path} with scale {lora_scale}")
+        lora_path = os.path.join(model_dir, lora_path)
         state_dict = load_ckpt(lora_path, device)
 
         LORA_PREFIX_UNET = "lora_unet"
@@ -203,7 +262,6 @@ def apply_lora(pipeline, lora_configs, device, dtype):
                 )
             else:
                 curr_layer.weight.data += lora_scale * alpha * torch.mm(weight_up, weight_down)
-        print(f"lora {lora_name} applied")
         del state_dict, updates
 
     return pipeline

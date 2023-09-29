@@ -3,8 +3,8 @@ import subprocess
 from huggingface_hub import hf_hub_download
 from gdown import download as gdown_download
 
-# Motion modules are the fp16+safetensors versions converted by the author of this repo.
-# They are faster to be loaded compared to the originals, which is important for serverless usage.
+# Motion modules and motion loras are the fp16+safetensors versions converted by the author of this repo.
+# They offer faster and smaller loading compared to the original ckpts, which is important for serverless usage.
 # Other models are the original models from huggingface.
 with open(os.path.join(os.path.dirname(__file__), "download_list.txt"), "r") as r:
     download_list = r.read().splitlines()

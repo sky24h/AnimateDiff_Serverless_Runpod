@@ -6,7 +6,7 @@ os.environ["CUDA_MODULE_LOADING"] = "LAZY"
 os.environ["SAFETENSORS_FAST_GPU"] = "1"
 import runpod
 import base64
-from inference_util import AnimateDiff
+from inference_util import AnimateDiff, check_data_format
 
 animatediff = AnimateDiff()
 
@@ -18,22 +18,26 @@ def encode_data(data_path):
 
 
 def text2video(job):
-    job_input = job["input"]
-    prompt = job_input["prompt"]
-    steps = job_input["steps"]
-    width = job_input["width"]
-    height = job_input["height"]
-    print("prompt is '{}'".format(prompt))
     try:
-        if not isinstance(prompt, str):
-            return {"error": "The input is not valid."}
-        else:
-            save_path = animatediff.inference(prompt=prompt, steps=steps, width=width, height=height)
-            video_data = encode_data(save_path)
-            return {"filename": os.path.basename(save_path), "data": video_data}
+        job_input = job["input"]
+        job_input = check_data_format(job_input)
+        print("prompt is '{}'".format(job_input["prompt"]))
+        save_path = animatediff.inference(
+            prompt         = job_input["prompt"],
+            steps          = job_input["steps"],
+            width          = job_input["width"],
+            height         = job_input["height"],
+            n_prompt       = job_input["n_prompt"],
+            guidance_scale = job_input["guidance_scale"],
+            seed           = job_input["seed"],
+            base_model     = job_input["base_model"],
+            base_loras     = job_input["base_loras"],
+            motion_lora    = job_input["motion_lora"],
+        )
+        video_data = encode_data(save_path)
+        return {"filename": os.path.basename(save_path), "data": video_data}
     except Exception as e:
-        print(e)
-        return {"error": "Something went wrong."}
+        return {"error": "Something went wrong, error message: {}".format(e)}
 
 
 runpod.serverless.start({"handler": text2video})

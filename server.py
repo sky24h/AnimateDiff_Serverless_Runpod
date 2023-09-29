@@ -6,9 +6,12 @@ os.environ["CUDA_MODULE_LOADING"] = "LAZY"
 os.environ["SAFETENSORS_FAST_GPU"] = "1"
 import runpod
 import base64
+import signal
+
 from inference_util import AnimateDiff, check_data_format
 
 animatediff = AnimateDiff()
+timeout_s = 60 * 5
 
 
 def encode_data(data_path):
@@ -17,8 +20,16 @@ def encode_data(data_path):
     return base64.b64encode(data).decode("utf-8")
 
 
+def handle_timeout(signum, frame):
+    # raise an error when timeout, so that the serverless function will be terminated to avoid extra cost
+    raise TimeoutError("Request Timeout! Please check the log for more details.")
+
+
 def text2video(job):
+    # set timeout to 5 minutes, should be enough for most cases
     try:
+        signal.signal(signal.SIGALRM, handle_timeout)
+        signal.alarm(timeout_s)
         job_input = job["input"]
         job_input = check_data_format(job_input)
         print("prompt is '{}'".format(job_input["prompt"]))
@@ -38,6 +49,8 @@ def text2video(job):
         return {"filename": os.path.basename(save_path), "data": video_data}
     except Exception as e:
         return {"error": "Something went wrong, error message: {}".format(e)}
+    finally:
+        signal.alarm(0)
 
 
 runpod.serverless.start({"handler": text2video})

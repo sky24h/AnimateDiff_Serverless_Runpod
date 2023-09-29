@@ -53,7 +53,7 @@ The time is measured from the moment the input prompt is sent to the moment the 
 - Sending the result image back to the client.
 
 ## 2. Dependencies
-- Python >= 3.9.7
+- Python >= 3.9
 - Docker
 - Local GPU is necessary for testing but not necessary for deployment. (Recommended: RTX 3090)
 
@@ -107,8 +107,8 @@ python test_client.py
 
 ## 4. TODO
 - [x] Support for specific base model for different objectives. (Person and Scene)
-- [x] Support for LoRa models. (Edit yaml file and place your model in "./models/DreamBooth_LoRA")
-- [x] Support for Motion LoRa models. (Also editable in yaml file, see [here](https://github.com/guoyww/AnimateDiff#features) for details and downloads.)
+- [x] Support for LoRA models. (Edit yaml file and place your model in "./models/DreamBooth_LoRA")
+- [x] Support for Motion LoRA models. (Also editable in yaml file, see [here](https://github.com/guoyww/AnimateDiff#features) for details and downloads.)
 - [ ] More detailed instructions
 - [ ] One-click deploy (If anyone is interested...)
 

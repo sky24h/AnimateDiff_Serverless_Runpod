@@ -12,5 +12,6 @@ gdrive 1RUEv-iTpQ6dq8r39nzLC298SHNFHTx7g ./models/DreamBooth_LoRA/v2_lora_Rollin
 gdrive 1RmbAB9hbcK8K8bDptyjvdUwtB_t4s2-N ./models/DreamBooth_LoRA/v2_lora_RollingClockwise-fp16.safetensors
 gdrive 1E3Bo-rbSldcBZ7pFu8teXdQuNFA-ipo6 ./models/DreamBooth_LoRA/v2_lora_ZoomIn-fp16.safetensors
 gdrive 1WOov3Lcp__jvEl-4EgnRW9MpSXxWuaAS ./models/DreamBooth_LoRA/v2_lora_ZoomOut-fp16.safetensors
+gdrive 1mT44c4txjZxJI-Xf0aU4egwE-1M_c-rB ./models/DreamBooth_LoRA/example_add_detail.safetensors
 wget https://civitai.com/api/download/models/79068 -P models/DreamBooth_LoRA/ --content-disposition --no-check-certificate
 wget https://civitai.com/api/download/models/29460 -P models/DreamBooth_LoRA/ --content-disposition --no-check-certificate

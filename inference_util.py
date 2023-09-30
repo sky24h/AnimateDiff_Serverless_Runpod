@@ -156,7 +156,7 @@ class AnimateDiff:
 
     def _update_model(self, base_model, base_loras, motion_lora):
         # update model
-        if base_model or base_model == "":
+        if base_model and base_model != "":
             self._reload_motion_module()
             self.pipeline = load_base_model(self.pipeline, self.model_dir, base_model, self.device, self.dtype)
             # make sure the model is on the right device and dtype

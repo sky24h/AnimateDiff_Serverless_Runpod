@@ -1,5 +1,6 @@
-runpod
+runpod==1.5.3
 imageio[ffmpeg]==2.31.1
+imageio-ffmpeg==0.4.9
 omegaconf==2.3.0
 safetensors==0.3.2
 einops==0.6.1

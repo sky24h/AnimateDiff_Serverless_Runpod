@@ -82,7 +82,7 @@ def check_data_format(job_input):
             raise ValueError("motion_lora must be a list of length 2.")
         if not isinstance(motion_lora[0], str):
             raise ValueError("motion_lora must be a list of strings.")
-        if not isinstance(motion_lora[1], float):
+        if (not isinstance(motion_lora[1], float)) and (not isinstance(motion_lora[1], int)):
             raise ValueError("motion_lora must be a list of floats.")
     return {
         "prompt"        : prompt,

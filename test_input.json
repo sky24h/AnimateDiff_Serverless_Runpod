@@ -7,7 +7,7 @@
         "guidance_scale": 7.5,
         "seed": 195577361,
         "n_prompt": "watermark, blur, haze, deformed iris, deformed pupils, semi-realistic, cgi, 3d, render, sketch, cartoon, drawing, anime, art, mutated hands and fingers, deformed, distorted, disfigured, poorly drawn, bad anatomy, wrong anatomy, extra limb, missing limb, floating limbs, disconnected limbs, mutation, mutated, ugly, disgusting, amputation",
-        "base_model": "realisticVisionV51_v20Novae.safetensors",
+        "base_model": "realisticVisionV60B1_v20Novae.safetensors",
         "base_loras": {
         "lora1": ["example_add_detail.safetensors", 0.6]
         },

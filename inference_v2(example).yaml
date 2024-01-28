@@ -50,7 +50,7 @@ Person:
 Default:
   width: 768
   height: 512
-  base_model: "realisticVisionV51_v20Novae.safetensors"
+  base_model: "realisticVisionV60B1_v20Novae.safetensors"
   motion_lora:
     # - "v2_lora_ZoomOut-fp16.safetensors"
     # - 1.0

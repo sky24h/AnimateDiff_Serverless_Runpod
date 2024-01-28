@@ -8,4 +8,5 @@ transformers==4.30.2
 accelerate==0.20.3
 xformers==0.0.20
 diffusers==0.20.0
-huggingface-hub
+gdown==5.0.1
+huggingface-hub==0.19.4

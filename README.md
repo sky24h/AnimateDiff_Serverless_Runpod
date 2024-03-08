@@ -81,6 +81,10 @@ python inference_util.py
 python server.py
 ```
 
+During downloading, if you encounter errors like "gdown.exceptions.FileURLRetrievalError: Cannot retrieve the public link of the file.", 
+reinstalling the gdown package using "pip install --upgrade --no-cache-dir gdown" and rerunning the download.py may help.
+
+
 #### 2. Deploy on RunPod
 1. First, make sure you have installed Docker and have accounts on both DockerHub and RunPod.
 

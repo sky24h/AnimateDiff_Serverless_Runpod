@@ -58,6 +58,7 @@ The time is measured from the moment the input prompt is sent to the moment the 
 - Local GPU is necessary for testing but not necessary for deployment. (Recommended: RTX 3090)
 
 If you don't have a GPU, you can modify and test the code on [Google Colab](https://colab.research.google.com/) and then build and deploy the application on RunPod.
+
 Example Notebook: [link](https://colab.research.google.com/drive/1Gd6uuiItbIFjVPFNyJQhEEEL9khdAyY7?usp=sharing)
 
 <a id="Usage"></a>
